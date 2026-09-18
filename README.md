@@ -110,3 +110,6 @@ Reference:
 Independent Communications Authority of South Africa (ICASA). (n.d.).
 Numbering Plan Regulations. Available at: https://www.icasa.org.za/
 
+YOUTUBE Video 
+https://youtube.com/shorts/otCD6NTPzio?si=s_WrawHZwDAlZ4Be
+
