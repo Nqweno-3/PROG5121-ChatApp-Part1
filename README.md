@@ -92,5 +92,21 @@ To run this project, you need:
 •	NetBeans IDE
 •	JUnit 5
 
+REGEX REFERENCE 
 
+The cellphone number follows the South African international format using the
+country code `+27`.
+
+Regex:
+
+`^\+27[0-9]{9}$`
+
+Example:
+
+`+27838968976`
+
+Reference:
+
+Independent Communications Authority of South Africa (ICASA). (n.d.).
+Numbering Plan Regulations. Available at: https://www.icasa.org.za/
 
