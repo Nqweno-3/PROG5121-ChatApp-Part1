@@ -105,10 +105,19 @@ Example:
 
 `+27838968976`
 
-Reference:
+REFERENCES
 
-Independent Communications Authority of South Africa (ICASA). (n.d.).
-Numbering Plan Regulations. Available at: https://www.icasa.org.za/
+Oracle. n.d. Java Documentation. Available at:
+https://docs.oracle.com/en/java/
+
+Apache Maven. n.d. Maven Documentation. Available at:
+https://maven.apache.org/guides/
+
+ICASA. n.d. Numbering Plan Regulations. Available at:
+https://www.icasa.org.za/
+
+JUnit. n.d. JUnit 5 User Guide. Available at:
+https://junit.org/junit5/docs/current/user-guide/
 
 YOUTUBE Video 
 https://youtube.com/shorts/otCD6NTPzio?si=s_WrawHZwDAlZ4Be
