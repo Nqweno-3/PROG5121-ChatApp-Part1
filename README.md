@@ -94,8 +94,11 @@ To run this project, you need:
 
 REGEX REFERENCE 
 
-The cellphone number follows the South African international format using the
-country code `+27`.
+Cellphone Number:
+The cellphone number validation uses a regular expression to check
+that the number follows the South African international format beginning
+with +27.
+
 
 Regex:
 
