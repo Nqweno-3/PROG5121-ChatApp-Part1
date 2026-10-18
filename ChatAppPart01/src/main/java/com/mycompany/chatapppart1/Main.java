@@ -178,7 +178,7 @@ public class Main {
         String loginStatus = login.returnLoginStatus();
         System.out.println(loginStatus);
 
-        // Display the QuickChat menu only after successful login.
+        // Display the ChatApp menu only after successful login.
         if (!loginStatus.startsWith("Welcome")) {
             return;
         }
@@ -186,7 +186,7 @@ public class Main {
         boolean running = true;
 
         while (running) {
-            System.out.println("\n===== QUICKCHAT MENU =====");
+            System.out.println("\n===== CHATAPP MENU =====");
             System.out.println("1) Send Messages");
             System.out.println("2) Show recently sent messages");
             System.out.println("3) Quit");
@@ -281,7 +281,7 @@ public class Main {
                     break;
 
                 case "3":
-                    System.out.println("Thank you for using QuickChat. Goodbye!");
+                    System.out.println("Thank you for using ChatApp. Goodbye!");
                     running = false;
                     break;
 
