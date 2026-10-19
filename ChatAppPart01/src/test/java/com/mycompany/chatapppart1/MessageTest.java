@@ -15,7 +15,7 @@ public class MessageTest {
 
         Message msg = new Message(
                 "+27718693002",
-                "Hi Mike, can you join us for dinner tonight?",
+                "Hi Minqweno, can you join us for dinner tonight?",
                 0
         );
 
