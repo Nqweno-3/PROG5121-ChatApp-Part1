@@ -125,3 +125,61 @@ https://junit.org/junit5/docs/current/user-guide/
 YOUTUBE Video 
 https://youtube.com/shorts/otCD6NTPzio?si=s_WrawHZwDAlZ4Be
 
+
+PART 2
+
+
+ChatApp is a Java console-based messaging application developed for part 2. The application extends the registration and login functionality from part 1 and allows users to send, disregard, and store messages.
+FEATURES
+•	User registration and login.
+•	Menu-driven console interface.
+•	Set a limit for the number of messages.
+•	Generate a unique 10-digit message id.
+•	Validate message IDs and recipient cellphone numbers.
+•	Limit messages to 250 characters.
+•	Generate a message hash.
+•	Send, disregard, or store messages.
+•	Display the total number of messages sent.
+•	Store messages in JSon format.
+•	Automated testing using Junit.
+
+TECHNOLOGIES USED
+•	Java
+•	Apache Maven Junit
+•	Git and GitHub
+•	GitHub Desktop
+
+REQUIREMENTS
+To run the application, you need:
+•	Java Development Kit (JDK)
+•	Apache Maven, if it is not included through your IDE that supports Maven projects.
+
+How To Run the Application
+1.	Clone or download the repository from GitHub.
+2.	Open the project on NetBeans.
+3.	Allow Maven to load the project dependencies.
+4.	Run the Main.java file.
+5.	Register or log in when prompted.
+6.	Follow the on-screen menu instructions to use ChatApp.
+
+Main Menu
+The application provides these options:
+1.	Send Messages
+2.	Show recently sent messages
+3.	Quit
+The recently sent messages option displays a “Coming Soon.” Message as specified in project requirements.
+
+Message Storage
+Messages selected for storage are saved in a JSon file named storedMessages.json. This file stores the message information in Json format.
+
+Testing
+The application includes Junit tests for checking the message functionality and related requirements.
+To run the tests in NetBeans:
+1.	Open the project.
+2.	Locate the test classes under Test Packages.
+3.	Right-cllick a test class.
+4.	Select Test File or run all project tests.
+
+Version Control
+GitHub and GitHub Desktop are used to manage the project’s source code and track development progress.
+
