@@ -80,8 +80,8 @@ public class Main {
             return;
         }
 
-        // 3. QuickChat menu
-        System.out.println("\nWelcome to QuickChat.");
+        // 3. ChatApp menu
+        System.out.println("\nWelcome to ChatApp.");
 
         boolean running = true;
 
@@ -238,7 +238,7 @@ public class Main {
                     System.out.println("Coming Soon.");
 
                 case "3" -> {
-                    System.out.println("Thank you for using QuickChat.");
+                    System.out.println("Thank you for using ChatApp.");
                     running = false;
                 }
 
