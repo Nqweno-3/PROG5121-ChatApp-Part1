@@ -1,17 +1,12 @@
 /*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt
- * to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java
- * to edit this template
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package com.mycompany.chatapppart1;
 
 import java.util.Scanner;
 
 /**
- * The Main class starts and controls the ChatApp program.
- * It allows the user to enter information and complete
- * the registration and login process.
  *
  * @author Student
  */
@@ -39,20 +34,21 @@ public class Main {
         System.out.print("Enter your cellphone number: ");
         String phoneNumber = input.nextLine();
 
-        // Create the Login object using your existing constructor
         Login login = new Login(
                 firstName, lastName, username, password, phoneNumber
         );
 
-        // Display registration results
         System.out.println("\n" + login.registerUser());
 
-        // Check whether registration details are valid
         if (!login.checkUserName()
                 || !login.checkPasswordComplexity()
                 || !login.checkCellPhoneNumber()) {
 
-            System.out.println("\nRegistration unsuccessful. Please restart and enter valid details.");
+            System.out.println(
+                    "\nRegistration unsuccessful. Please restart "
+                    + "and enter valid details."
+            );
+
             input.close();
             return;
         }
@@ -71,24 +67,49 @@ public class Main {
         login.setEnteredUsername(enteredUsername);
         login.setEnteredPassword(enteredPassword);
 
-        // Display login status
         System.out.println(login.returnLoginStatus());
 
-        // Continue only if login succeeds
         if (!login.loginUser()) {
             input.close();
             return;
         }
 
-        // 3. ChatApp menu
+        // 3. Ask for the message allowance once
+        int messageLimit;
+
+        while (true) {
+            System.out.print(
+                    "\nEnter the number of messages you wish to send: "
+            );
+
+            try {
+                messageLimit = Integer.parseInt(input.nextLine());
+
+                if (messageLimit > 0) {
+                    break;
+                }
+
+                System.out.println(
+                        "Please enter a number greater than zero."
+                );
+
+            } catch (NumberFormatException e) {
+                System.out.println(
+                        "Invalid number. Please enter a whole number."
+                );
+            }
+        }
+
+        int messagesProcessed = 0;
+
+        // 4. ChatApp menu
         System.out.println("\nWelcome to ChatApp.");
 
         boolean running = true;
 
         while (running) {
 
-            System.out.println("\nPlease choose an option:");
-            System.out.println("1) Send Messages");
+            System.out.println("\n1) Send Messages");
             System.out.println("2) Show recently sent messages");
             System.out.println("3) Quit");
             System.out.print("Enter your choice: ");
@@ -97,37 +118,35 @@ public class Main {
 
             switch (menuChoice) {
 
-                case "1" ->  {
-                    // Ask how many messages the user wants to process
-                    System.out.print("How many messages would you like to send? ");
+                case "1":
 
-                    int messageLimit = 0;
-
-                    try {
-                        messageLimit = Integer.parseInt(input.nextLine());
-
-                        if (messageLimit <= 0) {
-                            System.out.println("Please enter a number greater than zero.");
-                        }
-
-                    } catch (NumberFormatException e) {
-                        System.out.println("Invalid number. Please enter a whole number.");
+                    if (messagesProcessed >= messageLimit) {
+                        System.out.println("Message limit reached.");
+                        break;
                     }
 
-                    // Loop through the requested number of messages
-                    for (int i = 0; i < messageLimit; i++) {
+                    // The for loop processes only the remaining allowance.
+                    for (int i = messagesProcessed;
+                         i < messageLimit; i++) {
 
-                        System.out.println("\nMessage " + (i + 1));
+                        System.out.println(
+                                "\nCreating message " + (i + 1)
+                                + " of " + messageLimit
+                        );
 
-                        System.out.print("Enter recipient cellphone number: ");
+                        System.out.print(
+                                "Enter recipient cellphone number: "
+                        );
                         String recipient = input.nextLine();
 
                         System.out.print("Enter your message: ");
                         String messageText = input.nextLine();
 
-                        // Create a new message
                         Message currentMessage =
                                 new Message(recipient, messageText, i);
+
+                        // Each entry consumes one attempt.
+                        messagesProcessed++;
 
                         // Validate message ID
                         if (!currentMessage.checkMessageID()) {
@@ -156,13 +175,13 @@ public class Main {
                             continue;
                         }
 
-                        // Display message hash
+                        // Display generated hash
                         System.out.println(
                                 "Message Hash: "
                                 + currentMessage.getMessageHash()
                         );
 
-                        // Choose an action
+                        // Choose what happens to the message
                         System.out.println("\nChoose an action:");
                         System.out.println("1) Send Message");
                         System.out.println("2) Disregard Message");
@@ -170,88 +189,93 @@ public class Main {
                         System.out.print("Enter your choice: ");
 
                         String messageChoice = input.nextLine();
-
                         String result;
 
                         switch (messageChoice) {
 
-                            case "1" -> {
-                                result = currentMessage.SentMessage("Send Message");
+                            case "1":
+                                result = currentMessage.SentMessage(
+                                        "Send Message"
+                                );
+
                                 System.out.println(result);
 
-                                // Display details only after successful sending
-                                if (currentMessage.getStatus().equals("SENT")) {
+                                if ("SENT".equals(
+                                        currentMessage.getStatus())) {
 
                                     System.out.println(
                                             "Message ID: "
-                                                    + currentMessage.getMessageID()
+                                            + currentMessage.getMessageID()
                                     );
 
                                     System.out.println(
                                             "Message Hash: "
-                                                    + currentMessage.getMessageHash()
+                                            + currentMessage.getMessageHash()
                                     );
 
                                     System.out.println(
                                             "Recipient: "
-                                                    + currentMessage.getRecipient()
+                                            + currentMessage.getRecipient()
                                     );
 
                                     System.out.println(
                                             "Message: "
-                                                    + currentMessage.getMessage()
+                                            + currentMessage.getMessage()
                                     );
                                 }
-                            }
+                                break;
 
-                            case "2" -> {
+                            case "2":
                                 result = currentMessage.SentMessage(
                                         "Disregard Message"
                                 );
                                 System.out.println(result);
-                            }
+                                break;
 
-                            case "3" -> {
+                            case "3":
                                 result = currentMessage.SentMessage(
                                         "Store Message"
                                 );
                                 System.out.println(result);
-                            }
+                                break;
 
-                            default -> System.out.println(
-                                        "Invalid choice. Please choose 1, 2 or 3."
+                            default:
+                                System.out.println(
+                                        "Invalid choice. Message not processed."
                                 );
+                                break;
                         }
                     }
 
-                    // Display the total number of messages sent
-                    Message counter = new Message("", "", 0);
+                    System.out.println("\nMessage limit reached.");
 
                     System.out.println(
-                            "\nTotal messages sent: "
-                            + counter.returnTotalMessagess()
+                            "Total messages successfully sent: "
+                            + new Message("", "", 0)
+                                    .returnTotalMessagess()
                     );
 
-                }
+                    break;
 
-                case "2" -> // Required behaviour in the assignment instructions
+                case "2":
                     System.out.println("Coming Soon.");
+                    break;
 
-                case "3" -> {
+                case "3":
                     System.out.println("Thank you for using ChatApp.");
                     running = false;
-                }
+                    break;
 
-                default -> System.out.println(
+                default:
+                    System.out.println(
                             "Invalid option. Please choose 1, 2 or 3."
                     );
+                    break;
             }
         }
 
         input.close();
     }
 }
-
-
 
     

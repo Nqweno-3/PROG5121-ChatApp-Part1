@@ -1,9 +1,23 @@
 [
-  {
-    "messageId": "3458468832",
-    "messageHash": "34:0:HIMOS",
-    "recipient": "+27633851916",
-    "message": "Hi mos",
-    "status": "STORED"
-  }
+ {
+ "messageId": "2067713230",
+ "messageHash": "20:0:HIMOS",
+ "recipient": "+27633851916",
+ "message": "Hi mos",
+ "status": "STORED"
+ },
+ {
+ "messageId": "9651123649",
+ "messageHash": "96:2:HIMOS",
+ "recipient": "+27656061884",
+ "message": "Hi mos",
+ "status": "STORED"
+ },
+ {
+ "messageId": "9639665216",
+ "messageHash": "96:3:COMETODAY",
+ "recipient": "+27785926452",
+ "message": "Come back home today",
+ "status": "STORED"
+ }
 ]

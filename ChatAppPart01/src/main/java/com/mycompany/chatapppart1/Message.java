@@ -8,7 +8,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * The Message class handles message creation,
@@ -26,16 +26,18 @@ public final class Message {
     private final String recipient;
     private final String message;
     private final String messageHash;
+
     private String status;
 
     private static int totalMessagesSent = 0;
 
-    private static final List<Message> sentMessages = new ArrayList<>();
-    private static final List<Message> storedMessages = new ArrayList<>();
+    private static final List<Message> sentMessages =
+            new ArrayList<>();
 
-    /*
-     * Creates a new message.
-     */
+    private static final List<Message> storedMessages =
+            new ArrayList<>();
+
+    // Creates a new message.
     public Message(String recipient, String message, int messageNumber) {
 
         this.messageID = generateMessageID();
@@ -46,49 +48,39 @@ public final class Message {
         this.status = "PENDING";
     }
 
-    /*
-     * Generates a random ten-digit message ID.
-     */
+    // Generates a random ten-digit message ID.
     private String generateMessageID() {
 
-        Random random = new Random();
-
-        long number = 1000000000L
-                + (long) (random.nextDouble() * 9000000000L);
+        long number = ThreadLocalRandom.current().nextLong(
+                1_000_000_000L,
+                10_000_000_000L
+        );
 
         return String.valueOf(number);
     }
 
-    /*
-     * Checks that the message ID contains ten digits.
-     */
+    // Checks that the message ID contains exactly ten digits.
     public boolean checkMessageID() {
 
         return messageID != null
                 && messageID.matches("[0-9]{10}");
     }
 
-    /*
-     * Validates the recipient's international cellphone number.
-     */
+    // Validates the recipient's international cellphone number.
     public String checkRecipientCell() {
 
         if (recipient != null
                 && recipient.matches("\\+[1-9][0-9]{7,14}")) {
 
             return "Cell phone number successfully captured.";
-
-        } else {
-
-            return "Cell phone number is incorrectly formatted or "
-                    + "does not contain an international code. "
-                    + "Please correct the number and try again.";
         }
+
+        return "Cell phone number is incorrectly formatted or "
+                + "does not contain an international code. "
+                + "Please correct the number and try again.";
     }
 
-    /*
-     * Checks whether the message is within the 250-character limit.
-     */
+    // Checks whether the message is within the 250-character limit.
     public String checkMessageLength() {
 
         if (message == null) {
@@ -105,14 +97,11 @@ public final class Message {
                 + excess + "; please reduce the size.";
     }
 
-    /*
-     * Creates the uppercase message hash.
-     */
+    // Creates the uppercase message hash.
     public String createMessageHash() {
 
         if (messageID == null || message == null
                 || message.trim().isEmpty()) {
-
             return "";
         }
 
@@ -123,10 +112,12 @@ public final class Message {
 
         // Remove punctuation from the first and last words.
         firstWord = firstWord.replaceAll(
-                "^[^a-zA-Z0-9]+|[^a-zA-Z0-9]+$", "");
+                "^[^a-zA-Z0-9]+|[^a-zA-Z0-9]+$", ""
+        );
 
         lastWord = lastWord.replaceAll(
-                "^[^a-zA-Z0-9]+|[^a-zA-Z0-9]+$", "");
+                "^[^a-zA-Z0-9]+|[^a-zA-Z0-9]+$", ""
+        );
 
         String firstTwoCharacters = messageID.substring(0, 2);
 
@@ -135,21 +126,19 @@ public final class Message {
                 + firstWord + lastWord).toUpperCase();
     }
 
-    /*
-     * Allows the user to send, disregard or store a message.
-     */
+    // Sends, disregards or stores a message.
     public String SentMessage(String choice) {
 
         if (choice == null) {
             return "Invalid message option.";
         }
 
+        if (!"PENDING".equals(status)) {
+            return "Message has already been processed.";
+        }
+
         if (choice.equalsIgnoreCase("Send Message")
                 || choice.equalsIgnoreCase("Send")) {
-
-            if (!"PENDING".equals(status)) {
-                return "Message has already been processed.";
-            }
 
             if (!checkMessageID()
                     || !checkRecipientCell().equals(
@@ -157,7 +146,8 @@ public final class Message {
                     || !checkMessageLength().equals(
                             "Message ready to send.")) {
 
-                return "Message could not be sent. Check the message details.";
+                return "Message could not be sent. "
+                        + "Check the message details.";
             }
 
             status = "SENT";
@@ -170,10 +160,6 @@ public final class Message {
                 || choice.equalsIgnoreCase("Disregard")
                 || choice.equalsIgnoreCase("Discard")) {
 
-            if (!"PENDING".equals(status)) {
-                return "Message has already been processed.";
-            }
-
             status = "DISREGARDED";
 
             return "Press 0 to delete the message.";
@@ -181,26 +167,25 @@ public final class Message {
         } else if (choice.equalsIgnoreCase("Store Message")
                 || choice.equalsIgnoreCase("Store")) {
 
-            if (!"PENDING".equals(status)) {
-                return "Message has already been processed.";
-            }
-
             status = "STORED";
             storedMessages.add(this);
 
-            storeMessage();
+            // Only confirm storage if writing succeeds.
+            if (storeMessage()) {
+                return "Message successfully stored.";
+            }
 
-            return "Message successfully stored.";
+            storedMessages.remove(this);
+            status = "PENDING";
 
-        } else {
+            return "Message could not be stored. Please try again.";
 
-            return "Invalid message option.";
         }
+
+        return "Invalid message option.";
     }
 
-    /*
-     * Returns the details of all messages successfully sent.
-     */
+    // Returns the details of all successfully sent messages.
     public String printMessages() {
 
         StringBuilder output = new StringBuilder();
@@ -227,21 +212,17 @@ public final class Message {
         return output.toString();
     }
 
-    /*
-     * Returns the total number of successfully sent messages.
-     * The method name follows the assessment spelling.
-     */
+    // Returns the total number of successfully sent messages.
     public int returnTotalMessagess() {
 
         return totalMessagesSent;
     }
 
-    /*
-     * Stores all messages selected for later sending in JSON.
-     */
-    public void storeMessage() {
+    // Writes stored messages to a JSON file.
+    public boolean storeMessage() {
 
-        try (FileWriter writer = new FileWriter("storedMessages.json")) {
+        try (FileWriter writer =
+                     new FileWriter("storedMessages.json")) {
 
             writer.write("[\n");
 
@@ -249,23 +230,23 @@ public final class Message {
 
                 Message stored = storedMessages.get(i);
 
-                writer.write("  {\n");
+                writer.write(" {\n");
 
-                writer.write("    \"messageId\": \""
+                writer.write(" \"messageId\": \""
                         + escapeJSON(stored.messageID) + "\",\n");
 
-                writer.write("    \"messageHash\": \""
+                writer.write(" \"messageHash\": \""
                         + escapeJSON(stored.messageHash) + "\",\n");
 
-                writer.write("    \"recipient\": \""
+                writer.write(" \"recipient\": \""
                         + escapeJSON(stored.recipient) + "\",\n");
 
-                writer.write("    \"message\": \""
+                writer.write(" \"message\": \""
                         + escapeJSON(stored.message) + "\",\n");
 
-                writer.write("    \"status\": \"STORED\"\n");
+                writer.write(" \"status\": \"STORED\"\n");
 
-                writer.write("  }");
+                writer.write(" }");
 
                 if (i < storedMessages.size() - 1) {
                     writer.write(",");
@@ -276,16 +257,19 @@ public final class Message {
 
             writer.write("]\n");
 
+            return true;
+
         } catch (IOException e) {
 
             System.out.println(
-                    "Error saving messages: " + e.getMessage());
+                    "Error saving messages: " + e.getMessage()
+            );
+
+            return false;
         }
     }
 
-    /*
-     * Escapes special characters for valid JSON strings.
-     */
+    // Escapes special characters so the JSON remains valid.
     private String escapeJSON(String text) {
 
         if (text == null) {
@@ -299,34 +283,30 @@ public final class Message {
                 .replace("\t", "\\t");
     }
 
-    // Returns the message ID.
     public String getMessageID() {
         return messageID;
     }
 
-    // Returns the message number.
     public int getMessageNumber() {
         return messageNumber;
     }
 
-    // Returns the recipient number.
     public String getRecipient() {
         return recipient;
     }
 
-    // Returns the message text.
     public String getMessage() {
         return message;
     }
 
-    // Returns the message hash.
     public String getMessageHash() {
         return messageHash;
     }
 
-    // Returns the message status.
     public String getStatus() {
         return status;
     }
 }
+
+    
     
