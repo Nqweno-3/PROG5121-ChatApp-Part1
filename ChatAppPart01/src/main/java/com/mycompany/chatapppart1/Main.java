@@ -16,176 +16,78 @@ import java.util.Scanner;
  * @author Student
  */
 public class Main {
-
-    /*
-     * The main method is where the program begins running.
-     */
+    
     public static void main(String[] args) {
 
-        //Scanner is used to receive information entered by the user.
         Scanner input = new Scanner(System.in);
 
-        //Show the registration section to the user.
-        System.out.println("=====REGISTRATION=====");
+        // 1. Register the user
+        System.out.println("Please register below.");
 
-        //Request the user's first name.
         System.out.print("Enter your first name: ");
         String firstName = input.nextLine();
 
-        //Make sure the first name is not left blank.
-        while (firstName.trim().isEmpty()) {
-            System.out.println("First name cannot be empty.");
-            System.out.print("Enter your first name: ");
-            firstName = input.nextLine();
-        }
-
-        //Request the user's last name.
         System.out.print("Enter your last name: ");
         String lastName = input.nextLine();
 
-        //Prevent the user from continuing without entering a last name.
-        while (lastName.trim().isEmpty()) {
-            System.out.println("Last name cannot be empty.");
-            System.out.print("Enter your last name: ");
-            lastName = input.nextLine();
-        }
-
-        //Ask the user to provide a username.
         System.out.print("Enter your username: ");
         String username = input.nextLine();
 
-        //Check that the username field has not been left empty.
-        while (username.trim().isEmpty()) {
-            System.out.println("Username cannot be empty.");
-            System.out.print("Enter your username: ");
-            username = input.nextLine();
-        }
-
-        /*
-         * Create the Login object with the details collected so far.
-         * The password and cellphone number are left empty for now
-         * because they will be entered later.
-         */
-        Login login = new Login(
-                firstName,
-                lastName,
-                username,
-                "",
-                ""
-        );
-
-        //Validate the username before moving on to the password.
-        if (!login.checkUserName()) {
-            System.out.println(
-                    "Username is not correctly formatted; please ensure that your username "
-                    + "contains an underscore and is no more than five characters in length."
-            );
-            return;
-        }
-
-        //Ask the user to create a password.
         System.out.print("Enter your password: ");
         String password = input.nextLine();
 
-        //Make sure a password has been entered.
-        while (password.trim().isEmpty()) {
-            System.out.println("Password cannot be empty.");
-            System.out.print("Enter your password: ");
-            password = input.nextLine();
-        }
-
-        //Save the password in the Login object.
-        login.setPassword(password);
-
-        //Check the password before moving to the cellphone number.
-        if (!login.checkPasswordComplexity()) {
-            System.out.println(
-                    "Password is not correctly formatted; please ensure that the password "
-                    + "contains at least eight characters, a capital letter, a number, "
-                    + "and a special character."
-            );
-            return;
-        }
-
-        //Ask the user to enter their cellphone number.
         System.out.print("Enter your cellphone number: ");
         String phoneNumber = input.nextLine();
 
-        //Make sure the cellphone number field is not empty.
-        while (phoneNumber.trim().isEmpty()) {
-            System.out.println("Cellphone number cannot be empty.");
-            System.out.print("Enter your cellphone number: ");
-            phoneNumber = input.nextLine();
-        }
+        // Create the Login object using your existing constructor
+        Login login = new Login(
+                firstName, lastName, username, password, phoneNumber
+        );
 
-        //Save the cellphone number in the Login object.
-        login.setPhoneNumber(phoneNumber);
+        // Display registration results
+        System.out.println("\n" + login.registerUser());
 
-        //Validate the cellphone number before starting the login process.
-        if (!login.checkCellPhoneNumber()) {
-            System.out.println(
-                    "Cellphone number is not correctly formatted; please ensure that the "
-                    + "cellphone number starts with +27 and is followed by 9 numbers."
-            );
+        // Check whether registration details are valid
+        if (!login.checkUserName()
+                || !login.checkPasswordComplexity()
+                || !login.checkCellPhoneNumber()) {
+
+            System.out.println("\nRegistration unsuccessful. Please restart and enter valid details.");
+            input.close();
             return;
         }
 
-        /*
-         * At this point, all the registration checks have passed.
-         * Display the messages confirming the successful registration.
-         */
-        System.out.println();
-        System.out.println(login.registerUser());
+        System.out.println("\nRegistration completed successfully.");
 
-        //Show the login section.
-        System.out.println();
-        System.out.println("=====LOGIN=====");
+        // 2. Login
+        System.out.println("\nPlease log in.");
 
-        //Ask the user to enter their registered username.
         System.out.print("Enter your username: ");
         String enteredUsername = input.nextLine();
 
-        //Make sure the username is not left blank.
-        while (enteredUsername.trim().isEmpty()) {
-            System.out.println("Username cannot be empty.");
-            System.out.print("Enter your username: ");
-            enteredUsername = input.nextLine();
-        }
-
-        //Check that the entered username is the same as the registered one.
-        if (!enteredUsername.equals(login.getUsername())) {
-            System.out.println("Username or password incorrect, please try again.");
-            return;
-        }
-
-        //Ask the user to enter their registered password.
         System.out.print("Enter your password: ");
         String enteredPassword = input.nextLine();
 
-        //Make sure the password field is not empty.
-        while (enteredPassword.trim().isEmpty()) {
-            System.out.println("Password cannot be empty.");
-            System.out.print("Enter your password: ");
-            enteredPassword = input.nextLine();
-        }
-
-        //Save the username and password entered during the login attempt.
         login.setEnteredUsername(enteredUsername);
         login.setEnteredPassword(enteredPassword);
 
-                // Display the result of the login attempt.
-        String loginStatus = login.returnLoginStatus();
-        System.out.println(loginStatus);
+        // Display login status
+        System.out.println(login.returnLoginStatus());
 
-        // Display the ChatApp menu only after successful login.
-        if (!loginStatus.startsWith("Welcome")) {
+        // Continue only if login succeeds
+        if (!login.loginUser()) {
+            input.close();
             return;
         }
+
+        // 3. QuickChat menu
+        System.out.println("\nWelcome to QuickChat.");
 
         boolean running = true;
 
         while (running) {
-            System.out.println("\n===== CHATAPP MENU =====");
+
+            System.out.println("\nPlease choose an option:");
             System.out.println("1) Send Messages");
             System.out.println("2) Show recently sent messages");
             System.out.println("3) Quit");
@@ -194,24 +96,27 @@ public class Main {
             String menuChoice = input.nextLine();
 
             switch (menuChoice) {
-                case "1" -> {
+
+                case "1" ->  {
+                    // Ask how many messages the user wants to process
                     System.out.print("How many messages would you like to send? ");
 
-                    int messageLimit;
+                    int messageLimit = 0;
 
                     try {
                         messageLimit = Integer.parseInt(input.nextLine());
 
-                        if (messageLimit < 1) {
+                        if (messageLimit <= 0) {
                             System.out.println("Please enter a number greater than zero.");
-                            break;
                         }
+
                     } catch (NumberFormatException e) {
-                        System.out.println("Invalid number. Please try again.");
-                        break;
+                        System.out.println("Invalid number. Please enter a whole number.");
                     }
 
+                    // Loop through the requested number of messages
                     for (int i = 0; i < messageLimit; i++) {
+
                         System.out.println("\nMessage " + (i + 1));
 
                         System.out.print("Enter recipient cellphone number: ");
@@ -220,65 +125,133 @@ public class Main {
                         System.out.print("Enter your message: ");
                         String messageText = input.nextLine();
 
-                        Message newMessage =
+                        // Create a new message
+                        Message currentMessage =
                                 new Message(recipient, messageText, i);
 
-                        System.out.println(newMessage.checkRecipientCell());
-                        System.out.println(newMessage.checkMessageLength());
-
-                        if (!newMessage.checkMessageID()
-                                || !newMessage.checkRecipientCell().equals(
-                                        "Cell phone number successfully captured.")
-                                || !newMessage.checkMessageLength().equals(
-                                        "Message ready to send.")) {
-                            System.out.println(
-                                    "Message was not processed. Please check the details.");
+                        // Validate message ID
+                        if (!currentMessage.checkMessageID()) {
+                            System.out.println("Invalid message ID.");
                             continue;
                         }
 
+                        // Validate recipient
+                        String recipientResult =
+                                currentMessage.checkRecipientCell();
+
+                        System.out.println(recipientResult);
+
+                        if (!recipientResult.equals(
+                                "Cell phone number successfully captured.")) {
+                            continue;
+                        }
+
+                        // Validate message length
+                        String lengthResult =
+                                currentMessage.checkMessageLength();
+
+                        System.out.println(lengthResult);
+
+                        if (!lengthResult.equals("Message ready to send.")) {
+                            continue;
+                        }
+
+                        // Display message hash
+                        System.out.println(
+                                "Message Hash: "
+                                + currentMessage.getMessageHash()
+                        );
+
+                        // Choose an action
+                        System.out.println("\nChoose an action:");
                         System.out.println("1) Send Message");
-                        System.out.println("2) Store Message");
-                        System.out.println("3) Disregard Message");
-                        System.out.print("Choose an action: ");
+                        System.out.println("2) Disregard Message");
+                        System.out.println("3) Store Message");
+                        System.out.print("Enter your choice: ");
 
-                        String action = input.nextLine();
+                        String messageChoice = input.nextLine();
 
-                        switch (action) {
-                            case "1" -> System.out.println(
-                                    newMessage.SentMessage("Send Message"));
-                            case "2" -> System.out.println(
-                                    newMessage.SentMessage("Store Message"));
-                            case "3" -> System.out.println(
-                                    newMessage.SentMessage("Disregard Message"));
-                            default -> System.out.println("Invalid action selected.");
+                        String result;
+
+                        switch (messageChoice) {
+
+                            case "1" -> {
+                                result = currentMessage.SentMessage("Send Message");
+                                System.out.println(result);
+
+                                // Display details only after successful sending
+                                if (currentMessage.getStatus().equals("SENT")) {
+
+                                    System.out.println(
+                                            "Message ID: "
+                                                    + currentMessage.getMessageID()
+                                    );
+
+                                    System.out.println(
+                                            "Message Hash: "
+                                                    + currentMessage.getMessageHash()
+                                    );
+
+                                    System.out.println(
+                                            "Recipient: "
+                                                    + currentMessage.getRecipient()
+                                    );
+
+                                    System.out.println(
+                                            "Message: "
+                                                    + currentMessage.getMessage()
+                                    );
+                                }
+                            }
+
+                            case "2" -> {
+                                result = currentMessage.SentMessage(
+                                        "Disregard Message"
+                                );
+                                System.out.println(result);
+                            }
+
+                            case "3" -> {
+                                result = currentMessage.SentMessage(
+                                        "Store Message"
+                                );
+                                System.out.println(result);
+                            }
+
+                            default -> System.out.println(
+                                        "Invalid choice. Please choose 1, 2 or 3."
+                                );
                         }
                     }
 
-                    System.out.println("Total messages sent: "
-                            + new Message("", "", 0).returnTotalMessagess());
+                    // Display the total number of messages sent
+                    Message counter = new Message("", "", 0);
+
+                    System.out.println(
+                            "\nTotal messages sent: "
+                            + counter.returnTotalMessagess()
+                    );
+
                 }
 
-                case "2" -> {
-                    Message messageViewer = new Message("", "", 0);
-                    String sentDetails = messageViewer.printMessages();
-
-                    if (sentDetails.isEmpty()) {
-                        System.out.println("No messages have been sent yet.");
-                    } else {
-                        System.out.println(sentDetails);
-                    }
-
-                    System.out.println("Total messages sent: "
-                            + messageViewer.returnTotalMessagess());
-                }
+                case "2" -> // Required behaviour in the assignment instructions
+                    System.out.println("Coming Soon.");
 
                 case "3" -> {
-                    System.out.println("Thank you for using ChatApp. Goodbye!");
+                    System.out.println("Thank you for using QuickChat.");
                     running = false;
                 }
 
-                default -> System.out.println("Invalid option. Please choose 1, 2, or 3.");
+                default -> System.out.println(
+                            "Invalid option. Please choose 1, 2 or 3."
+                    );
             }
         }
+
+        input.close();
     }
 }
+
+
+
+    

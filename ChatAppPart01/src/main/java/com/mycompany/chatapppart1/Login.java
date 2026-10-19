@@ -13,7 +13,7 @@ package com.mycompany.chatapppart1;
 public class Login {
 
     // Stores the details provided by the user when registering
-    private String username;
+    private final String username;
     private String password;
     private String phoneNumber;
 
@@ -22,8 +22,8 @@ public class Login {
     private String enteredPassword;
 
     // Keeps track of the user's first and last name
-    private String firstName;
-    private String lastName;
+    private final String firstName;
+    private final String lastName;
 
     /*
      * Creates a Login object and saves the registration details
@@ -132,11 +132,7 @@ public class Login {
 
         // The password is accepted only when all requirements
         // have been satisfied.
-        if (hasUppercase && hasNumber && hasSpecialCharacter) {
-            return true;
-        } else {
-            return false;
-        }
+        return hasUppercase && hasNumber && hasSpecialCharacter;
     }
 
     /*
