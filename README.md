@@ -166,7 +166,7 @@ Main Menu
 The application provides these options:
 1.	Send Messages
 2.	Show recently sent messages
-3.	Quit
+3.	Quit.
 The recently sent messages option displays a “Coming Soon.” Message as specified in project requirements.
 
 Message Storage
