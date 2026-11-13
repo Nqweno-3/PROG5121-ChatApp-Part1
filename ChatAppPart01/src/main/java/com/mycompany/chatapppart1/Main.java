@@ -73,6 +73,8 @@ public class Main {
             input.close();
             return;
         }
+        
+        System.out.println("\nWelcome to ChatApp.");
 
         // 3. Ask for the message allowance once
         int messageLimit;
@@ -103,7 +105,6 @@ public class Main {
         int messagesProcessed = 0;
 
         // 4. ChatApp menu
-        System.out.println("\nWelcome to ChatApp.");
 
         boolean running = true;
 
