@@ -304,9 +304,31 @@ public final class Message {
     }
 
     public String getStatus() {
-        return status;
-    }
+    return status;
 }
 
+// Returns a copy of all successfully sent messages.
+public static List<Message> getSentMessages() {
+    return new ArrayList<>(sentMessages);
+}
+
+// Deletes a sent message using its message hash.
+public static boolean removeSentMessage(String messageHash) {
+
+    for (int i = 0; i < sentMessages.size(); i++) {
+
+        if (sentMessages.get(i).getMessageHash()
+                .equals(messageHash)) {
+
+            sentMessages.remove(i);
+            return true;
+        }
+    }
+
+    return false;
+}
+}        
+
+        
     
     
