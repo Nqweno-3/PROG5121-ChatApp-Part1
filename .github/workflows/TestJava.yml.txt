@@ -4,6 +4,7 @@ name: QuickChat Java Tests
 on:
   push:
   pull_request:
+  workflow_dispatch:
 
 jobs:
   test:
@@ -21,4 +22,5 @@ jobs:
           cache: maven
 
       - name: Run JUnit tests
+        working-directory: ./ChatAppPart01
         run: mvn -B test
