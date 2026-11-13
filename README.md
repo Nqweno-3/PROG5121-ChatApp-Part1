@@ -5,7 +5,7 @@ Module Code: PROG5121
 Assignment: ChatApp Part 1 project
 
 PROJECT OVERVIEW
-ChatApp Part 1 is a Java-based application that demonstrates a basic user registration and login system. The project allows a user to enter their personal details, create a username and password, and provide a 	South African cellphone number. The application checks whether the information entered follows the required rules before allowing the user to log in. The project also includes Junit tests to check that the registration and login methods work correctly.
+Quick Chat Part 1 is a Java-based application that demonstrates a basic user registration and login system. The project allows a user to enter their personal details, create a username and password, and provide a 	South African cellphone number. The application checks whether the information entered follows the required rules before allowing the user to log in. The project also includes Junit tests to check that the registration and login methods work correctly.
 
 FEATURES:
 •	User registration
@@ -129,7 +129,7 @@ https://youtube.com/shorts/otCD6NTPzio?si=s_WrawHZwDAlZ4Be
 PART 2
 
 
-ChatApp is a Java console-based messaging application developed for part 2. The application extends the registration and login functionality from part 1 and allows users to send, disregard, and store messages.
+Quick Chat is a Java console-based messaging application developed for part 2. The application extends the registration and login functionality from part 1 and allows users to send, disregard, and store messages.
 FEATURES
 •	User registration and login.
 •	Menu-driven console interface.
