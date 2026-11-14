@@ -185,4 +185,116 @@ GitHub and GitHub Desktop are used to manage the project’s source code and tra
 
 YouTube link: https://youtu.be/cIv5deuFNdg?si=p3eSgmTlyDH-MJBA
 
+# QuickChat — PROG5121 Portfolio of Evidence
+
+## Part 3: Store Data and Display Message Reports
+
+### Project Overview
+
+QuickChat is a Java messaging application developed using Apache NetBeans and Maven as part of the PROG5121 Portfolio of Evidence (POE).
+
+Part 3 extends the functionality developed in Parts 1 and 2 by introducing message collections, JSON storage, message searching, deletion, and reporting.
+
+### Technologies Used
+
+- Java
+- Apache NetBeans
+- Apache Maven
+- Gson (JSON processing)
+- JUnit 5 (automated testing)
+- Git and GitHub
+- GitHub Actions
+
+### Part 3 Features
+
+**1. Message Collections**
+
+The application maintains five collections:
+
+- Sent Messages
+- Disregarded Messages
+- Stored Messages
+- Message Hashes
+- Message IDs
+
+These collections are populated as messages are processed.
+
+**2. JSON Message Storage**
+
+Stored messages are saved in `storedMessages.json` using the Gson library.
+
+When the application restarts, previously stored messages are loaded from the JSON file.
+
+**3. Stored Messages Menu**
+
+The application provides the following functions:
+
+- Display all stored messages.
+- Display sender and recipient details.
+- Identify and display the longest stored message.
+- Search for messages using a Message ID.
+- Search for messages associated with a particular recipient.
+- Delete messages using their Message Hash.
+- Generate a report containing stored-message details.
+
+**4. Message Reports**
+
+The application generates a report displaying:
+
+- Message Hash
+- Recipient cellphone number
+- Message text
+- Total number of stored messages
+
+**5. Automated Unit Testing**
+
+JUnit 5 is used to test message collections, searching, deletion, and stored-message functionality.
+
+The project also uses GitHub Actions to run Maven tests automatically when changes are pushed to GitHub.
+
+### How to Run the Application
+
+1. Open the Maven project in Apache NetBeans.
+2. Ensure the required Maven dependencies are available.
+3. Run `Main.java`.
+4. Register and log in using valid credentials.
+5. Enter the number of messages to process.
+6. Use the main menu to send, disregard, or store messages.
+7. Select **Stored Messages** to access the Part 3 functions.
+
+### Testing
+
+To run the automated tests:
+
+1. Open the project in Apache NetBeans.
+2. Right-click the project.
+3. Select **Test**.
+4. Confirm that the tests finish with zero failures and errors.
+
+Alternatively, run:
+
+```bash
+mvn test
+```
+
+### Project Structure
+
+The main Java classes include:
+
+- `Login.java` — User registration and authentication.
+- `Main.java` — Application execution and menus.
+- `Message.java` — Message creation, validation, collections, and JSON storage.
+- `MessageManager.java` — Message searches, deletion, and reports.
+
+JUnit test classes include:
+
+- `LoginTest.java`
+- `MessageTest.java`
+- `MessageManagerTest.java`
+
+### Conclusion
+
+Part 3 extends QuickChat into a more complete messaging application by introducing persistent message storage and message management functionality.
+
+The application demonstrates Java programming concepts such as classes, objects, collections, loops, conditional statements, file handling, and automated unit testing.
 
