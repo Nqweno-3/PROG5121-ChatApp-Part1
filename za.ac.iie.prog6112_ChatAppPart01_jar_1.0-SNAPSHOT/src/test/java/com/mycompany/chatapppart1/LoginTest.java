@@ -10,179 +10,34 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * The LoginTest class is used to test the different methods
- * found in the Login class.
  *
- * Each test compares the result of a method with the
- * expected outcome.
+ * Tests registration, username validation,
+ * password complexity, cellphone validation
+ * and successful and unsuccessful login.
  *
  * @author Student
  */
 public class LoginTest {
 
-    /**
-     * Tests the checkUserName() method from the Login class.
-     *
-     * A valid username is used that includes an underscore
-     * and is five characters or less.
-     */
+    // Test 1: Valid username
     @Test
     public void testValidUserName() {
 
-        //Create a Login object using valid user information.
         Login login = new Login(
                 "Kyle",
                 "Ngati",
                 "kyl_1",
                 "Ch&&sec@ke99!",
-                "+27838968976");
+                "+27838968976"
+        );
 
-        //Confirm that the username passes the validation check.
         assertTrue(login.checkUserName());
     }
 
-    /**
-     * Tests the checkPasswordComplexity() method from the Login class.
-     *
-     * The password used in this test contains an uppercase letter,
-     * a number and a special character.
-     */
-    @Test
-    public void testValidPasswordComplexity() {
-
-        //Set up a Login object with a password that meets the requirements.
-        Login login = new Login(
-                "Kyle",
-                "Ngati",
-                "kyl_1",
-                "Ch&&sec@ke99!",
-                "+27838968976");
-
-        //Verify that the password is accepted as valid.
-        assertTrue(login.checkPasswordComplexity());
-    }
-
-    /**
-     * Tests the checkCellPhoneNumber() method from the Login class.
-     *
-     * The cellphone number used begins with +27 and has
-     * the correct number of digits.
-     */
-    @Test
-    public void testValidCellPhoneNumber() {
-
-        //Set up a Login object with a correctly formatted cellphone number.
-        Login login = new Login(
-                "Kyle",
-                "Ngati",
-                "kyl_1",
-                "Ch&&sec@ke99!",
-                "+27838968976");
-
-        //Make sure that the cellphone number passes the validation.
-        assertTrue(login.checkCellPhoneNumber());
-    }
-
-    /**
-     * Tests the registerUser() method from the Login class.
-     *
-     * This test checks that the correct messages are returned
-     * when all the registration details are valid.
-     */
-   
-@Test
-public void testRegisterUser() {
-
-    //Create a Login object with valid registration details.
-    Login login = new Login(
-            "Kyle",
-            "Ngati",
-            "kyl_1",
-            "Ch&&sec@ke99!",
-            "+27838968976");
-
-    //Save the registration message returned by the method.
-    String result = login.registerUser();
-
-    //Compare the expected message with the result from registerUser().
-    assertEquals(
-            "Username successfully captured.\n"
-            + "Password successfully captured.\n"
-            + "Cell phone number successfully added.",
-            result);
-}
-
-
-
-    /**
-     * Tests the loginUser() method from the Login class.
-     *
-     * The correct username and password are entered to check
-     * whether the login is accepted.
-     */
-    @Test
-    public void testLoginUser() {
-
-        //Create a Login object containing the registered credentials.
-        Login login = new Login(
-                "Kyle",
-                "Ngati",
-                "kyl_1",
-                "Ch&&sec@ke99!",
-                "+27838968976");
-
-        //Provide the username being used for the login attempt.
-        login.setEnteredUsername("kyl_1");
-
-        //Provide the password being used for the login attempt.
-        login.setEnteredPassword("Ch&&sec@ke99!");
-
-        //Confirm that the login details are accepted.
-        assertTrue(login.loginUser());
-    }
-
-    /**
-     * Tests the returnLoginStatus() method from the Login class.
-     *
-     * This test checks the message displayed when valid
-     * login details are entered.
-     */
-    @Test
-    public void testReturnLoginStatus() {
-
-        //Create a Login object with valid registration information.
-        Login login = new Login(
-                "Kyle",
-                "Ngati",
-                "kyl_1",
-                "Ch&&sec@ke99!",
-                "+27838968976");
-
-        //Enter the registered username.
-        login.setEnteredUsername("kyl_1");
-
-        //Enter the registered password.
-        login.setEnteredPassword("Ch&&sec@ke99!");
-
-        /*
-         * Check that the correct welcome message is displayed
-         * after a successful login.
-         */
-        assertEquals(
-                "Welcome Kyle Ngati, it is great to see you again.",
-                login.returnLoginStatus());
-    }
-
-    /**
-     * Tests the checkUserName() method using an invalid username.
-     *
-     * The username in this test does not contain an underscore
-     * and is also longer than the allowed length.
-     */
+    // Test 2: Invalid username
     @Test
     public void testInvalidUserName() {
 
-        //Create a Login object with an incorrectly formatted username.
         Login login = new Login(
                 "Kyle",
                 "Ngati",
@@ -191,21 +46,43 @@ public void testRegisterUser() {
                 "+27838968976"
         );
 
-        //Confirm that the username fails the validation check.
         assertFalse(login.checkUserName());
     }
 
-    /**
-     * Tests the checkPasswordComplexity() method using an invalid password.
-     *
-     * The password does not meet the required complexity rules
-     * because it does not include the required uppercase letter,
-     * number and special character.
-     */
+    // Test 3: Username exceeds five characters
+    @Test
+    public void testUsernameExceedsFiveCharacters() {
+
+        Login login = new Login(
+                "Kyle",
+                "Ngati",
+                "kyle_1",
+                "Ch&&sec@ke99!",
+                "+27838968976"
+        );
+
+        assertFalse(login.checkUserName());
+    }
+
+    // Test 4: Valid password complexity
+    @Test
+    public void testValidPasswordComplexity() {
+
+        Login login = new Login(
+                "Kyle",
+                "Ngati",
+                "kyl_1",
+                "Ch&&sec@ke99!",
+                "+27838968976"
+        );
+
+        assertTrue(login.checkPasswordComplexity());
+    }
+
+    // Test 5: Invalid password complexity
     @Test
     public void testInvalidPasswordComplexity() {
 
-        //Create a Login object with an invalid password.
         Login login = new Login(
                 "Kyle",
                 "Ngati",
@@ -214,20 +91,28 @@ public void testRegisterUser() {
                 "+27838968976"
         );
 
-        //Check that the password is rejected by the validation method.
         assertFalse(login.checkPasswordComplexity());
     }
 
-    /**
-     * Tests the checkCellPhoneNumber() method with an invalid number.
-     *
-     * The cellphone number does not use +27, which is required
-     * for the South African international format.
-     */
+    // Test 6: Valid cellphone number
+    @Test
+    public void testValidCellPhoneNumber() {
+
+        Login login = new Login(
+                "Kyle",
+                "Ngati",
+                "kyl_1",
+                "Ch&&sec@ke99!",
+                "+27838968976"
+        );
+
+        assertTrue(login.checkCellPhoneNumber());
+    }
+
+    // Test 7: Invalid cellphone number
     @Test
     public void testInvalidPhoneNumber() {
 
-        //Create a Login object with an incorrectly formatted phone number.
         Login login = new Login(
                 "Kyle",
                 "Ngati",
@@ -236,7 +121,106 @@ public void testRegisterUser() {
                 "08966553"
         );
 
-        //Verify that the invalid number is rejected.
         assertFalse(login.checkCellPhoneNumber());
+    }
+
+    // Test 8: Successful registration
+    @Test
+    public void testRegisterUser() {
+
+        Login login = new Login(
+                "Kyle",
+                "Ngati",
+                "kyl_1",
+                "Ch&&sec@ke99!",
+                "+27838968976"
+        );
+
+        String result = login.registerUser();
+
+        assertEquals(
+                "Username successfully captured.\n"
+                + "Password successfully captured.\n"
+                + "Cell phone number successfully added.",
+                result
+        );
+    }
+
+    // Test 9: Successful login
+    @Test
+    public void testLoginUser() {
+
+        Login login = new Login(
+                "Kyle",
+                "Ngati",
+                "kyl_1",
+                "Ch&&sec@ke99!",
+                "+27838968976"
+        );
+
+        login.setEnteredUsername("kyl_1");
+        login.setEnteredPassword("Ch&&sec@ke99!");
+
+        assertTrue(login.loginUser());
+    }
+
+    // Test 10: Unsuccessful login
+    @Test
+    public void testInvalidLogin() {
+
+        Login login = new Login(
+                "Kyle",
+                "Ngati",
+                "kyl_1",
+                "Ch&&sec@ke99!",
+                "+27838968976"
+        );
+
+        login.setEnteredUsername("kyl_1");
+        login.setEnteredPassword("WrongPassword123!");
+
+        assertFalse(login.loginUser());
+    }
+
+    // Test 11: Successful login status message
+    @Test
+    public void testReturnLoginStatus() {
+
+        Login login = new Login(
+                "Kyle",
+                "Ngati",
+                "kyl_1",
+                "Ch&&sec@ke99!",
+                "+27838968976"
+        );
+
+        login.setEnteredUsername("kyl_1");
+        login.setEnteredPassword("Ch&&sec@ke99!");
+
+        assertEquals(
+                "Welcome Kyle Ngati, it is great to see you again.",
+                login.returnLoginStatus()
+        );
+    }
+
+    // Test 12: Unsuccessful login status message
+    @Test
+    public void testInvalidLoginStatus() {
+
+        Login login = new Login(
+                "Kyle",
+                "Ngati",
+                "kyl_1",
+                "Ch&&sec@ke99!",
+                "+27838968976"
+        );
+
+        login.setEnteredUsername("wrong");
+        login.setEnteredPassword("Ch&&sec@ke99!");
+
+        assertEquals(
+                "Username or password incorrect, please try again.",
+                login.returnLoginStatus()
+        );
     }
 }

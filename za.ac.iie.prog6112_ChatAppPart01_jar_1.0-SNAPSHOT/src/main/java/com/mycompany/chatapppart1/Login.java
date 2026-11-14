@@ -1,36 +1,32 @@
 /*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt
- * to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package com.mycompany.chatapppart1;
 
 /**
- * The Login class is responsible for handling user registration
- * and login functions in the ChatApp application.
+ *
+ * Handles user registration, validation and login.
  *
  * @author Student
  */
 public class Login {
 
-    // Stores the details provided by the user when registering
+    // Registration details
+    private final String firstName;
+    private final String lastName;
     private final String username;
     private String password;
     private String phoneNumber;
 
-    // Stores the username and password entered when logging in
+    // Login details
     private String enteredUsername;
     private String enteredPassword;
 
-    // Keeps track of the user's first and last name
-    private final String firstName;
-    private final String lastName;
-
-    /*
-     * Creates a Login object and saves the registration details
-     * provided by the user.
-     */
-    public Login(String firstName, String lastName, String username,
-            String password, String phoneNumber) {
+    // Constructor
+    public Login(String firstName, String lastName,
+                 String username, String password,
+                 String phoneNumber) {
 
         this.firstName = firstName;
         this.lastName = lastName;
@@ -39,213 +35,166 @@ public class Login {
         this.phoneNumber = phoneNumber;
     }
 
-    /*
-     * Updates the password stored for the user.
-     */
+    // Password
     public void setPassword(String password) {
         this.password = password;
     }
 
-    /*
-     * Updates the cellphone number stored for the user.
-     */
+    // Cellphone number
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
 
-    /*
-     * Returns the username that was saved during registration.
-     */
+    // Return registered username
     public String getUsername() {
         return username;
     }
 
-    /*
-     * Saves the username entered by the user when logging in.
-     */
+    // Set username entered during login
     public void setEnteredUsername(String enteredUsername) {
         this.enteredUsername = enteredUsername;
     }
 
-    /*
-     * Saves the password entered by the user when logging in.
-     */
+    // Set password entered during login
     public void setEnteredPassword(String enteredPassword) {
         this.enteredPassword = enteredPassword;
     }
 
-    /*
-     * Checks if the username follows the required format.
-     * It needs to have an underscore and cannot be longer than
-     * five characters.
-     */
-    public boolean checkUserName() {
+    // Set both login details
+    public void setLoginDetails(String enteredUsername,
+                                String enteredPassword) {
 
-        // The username must contain an underscore and be five
-        // characters or less.
-        return username.contains("_") && username.length() <= 5;
+        this.enteredUsername = enteredUsername;
+        this.enteredPassword = enteredPassword;
     }
 
-    /*
-     * Checks whether the password follows the required rules.
-     *
-     * The password needs to:
-     * - Be at least eight characters long
-     * - Include an uppercase letter
-     * - Include a number
-     * - Include a special character
-     */
+    // Username must contain an underscore
+    // and must not exceed five characters
+    public boolean checkUserName() {
+
+        return username != null
+                && username.contains("_")
+                && username.length() <= 5;
+    }
+
+    // Password complexity validation
     public boolean checkPasswordComplexity() {
 
-        // These variables are used to check each password requirement.
+        if (password == null || password.length() < 8) {
+            return false;
+        }
+
         boolean hasUppercase = false;
         boolean hasNumber = false;
         boolean hasSpecialCharacter = false;
 
-        // A password shorter than eight characters is not accepted.
-        if (password.length() < 8) {
-            return false;
-        }
-
-        // Check each character in the password.
         for (int i = 0; i < password.length(); i++) {
 
-            // Gets the character at the current position.
             char character = password.charAt(i);
 
-            // Checks if the character is an uppercase letter.
             if (Character.isUpperCase(character)) {
                 hasUppercase = true;
             }
 
-            // Checks if the character is a number.
             if (Character.isDigit(character)) {
                 hasNumber = true;
             }
 
-            // Checks if the character is something other than
-            // a letter or number.
             if (!Character.isLetterOrDigit(character)) {
                 hasSpecialCharacter = true;
             }
         }
 
-        // The password is accepted only when all requirements
-        // have been satisfied.
-        return hasUppercase && hasNumber && hasSpecialCharacter;
+        return hasUppercase
+                && hasNumber
+                && hasSpecialCharacter;
     }
 
-    /*
-     * Checks whether the cellphone number follows the required
-     * South African international format.
-     *
-     * The number must:
-     * - Begin with +27
-     * - Have 12 characters altogether
-     * - Have only numbers after +27
-     */
+    // Validate South African cellphone number
+    // using a regular expression
+    //
+    // Reference:
+    // https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/regex/Pattern.html
     public boolean checkCellPhoneNumber() {
 
-        // First check the country code and the total length.
-        if (phoneNumber.startsWith("+27")
-                && phoneNumber.length() == 12) {
-
-            // Check the remaining characters after +27.
-            for (int i = 3; i < phoneNumber.length(); i++) {
-
-                // Every character after +27 must be a number.
-                if (!Character.isDigit(phoneNumber.charAt(i))) {
-                    return false;
-                }
-            }
-
-            // The cellphone number meets all the requirements.
-            return true;
-
-        } else {
-
-            // The cellphone number does not meet the required format.
-            return false;
-        }
+        return phoneNumber != null
+                && phoneNumber.matches("\\+27[0-9]{9}");
     }
 
-    /*
-     * Checks the user's username, password and cellphone number
-     * during the registration process and returns the relevant
-     * messages.
-     */
+    // Register user and return validation messages
     public String registerUser() {
 
-    //Used to combine the registration results into one message.
-    String message = "";
+        StringBuilder result = new StringBuilder();
 
-    //Check whether the username is valid.
-    if (checkUserName()) {
-        message += "Username successfully captured.\n";
-    } else {
-        message += "Username is not correctly formatted; "
-                + "please ensure that your username contains an "
-                + "underscore and is no more than five characters in length.";
-    }
+        // Username validation
+        if (checkUserName()) {
 
-    //Check whether the password meets the required rules.
-    if (checkPasswordComplexity()) {
-        message += "Password successfully captured.\n";
-    } else {
-        message += "Password is not correctly formatted; "
-                + "please ensure that the password contains at least "
-                + "eight characters, a capital letter, a number, "
-                + "and a special character.";
-    }
-
-    //Check whether the cellphone number is valid.
-    if (checkCellPhoneNumber()) {
-        message += "Cell phone number successfully added.";
-    } else {
-        message += "Cell phone number incorrectly formatted "
-                + "or does not contain international code.";
-    }
-
-    //Return the registration results.
-    return message;
-}
-
-    /*
-     * Compares the login details entered by the user with the
-     * details that were saved during registration.
-     */
-    public boolean loginUser() {
-
-        // Both the username and password must match the registered details.
-        if (enteredUsername.equals(username)
-                && enteredPassword.equals(password)) {
-
-            // The login details are correct.
-            return true;
+            result.append(
+                    "Username successfully captured.\n");
 
         } else {
 
-            // The username or password does not match.
-            return false;
+            result.append(
+                    "Username is not correctly formatted; "
+                    + "please ensure that your username "
+                    + "contains an underscore and is no more "
+                    + "than five characters in length.\n");
         }
+
+        // Password validation
+        if (checkPasswordComplexity()) {
+
+            result.append(
+                    "Password successfully captured.\n");
+
+        } else {
+
+            result.append(
+                    "Password is not correctly formatted; "
+                    + "please ensure that the password "
+                    + "contains at least eight characters, "
+                    + "a capital letter, a number, "
+                    + "and a special character.\n");
+        }
+
+        // Cellphone number validation
+        if (checkCellPhoneNumber()) {
+
+            result.append(
+                    "Cell phone number successfully added.");
+
+        } else {
+
+            result.append(
+                    "Cell phone number incorrectly formatted "
+                    + "or does not contain international code.");
+        }
+
+        return result.toString();
     }
 
-    /*
-     * Displays a message based on whether the login was successful.
-     */
+    // Authenticate registered user
+    public boolean loginUser() {
+
+        return username != null
+                && password != null
+                && username.equals(enteredUsername)
+                && password.equals(enteredPassword);
+    }
+
+    // Return login status
     public String returnLoginStatus() {
 
-        // Check if the entered login details are correct.
         if (loginUser()) {
 
-            // Display a welcome message when the login succeeds.
-            return "Welcome " + firstName + " " + lastName
+            return "Welcome " + firstName + " "
+                    + lastName
                     + ", it is great to see you again.";
 
         } else {
 
-            // Display an error message when the login details are incorrect.
-            return "Username or password incorrect, please try again.";
+            return "Username or password incorrect, "
+                    + "please try again.";
         }
     }
 }
