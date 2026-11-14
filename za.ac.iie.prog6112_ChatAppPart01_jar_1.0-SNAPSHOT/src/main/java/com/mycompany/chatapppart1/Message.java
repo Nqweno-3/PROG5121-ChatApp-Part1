@@ -15,6 +15,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Reader;
 import java.lang.reflect.Type;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
@@ -22,7 +23,8 @@ import java.util.concurrent.ThreadLocalRandom;
 /**
  *
  * Handles message validation, sending,
- * disregarding, JSON storage and message lists.
+ * storing, disregarding, JSON persistence
+ * and message collections.
  *
  * @author Student
  */
@@ -33,7 +35,11 @@ public final class Message {
     private static final Gson gson =
             new GsonBuilder().setPrettyPrinting().create();
 
-    @SerializedName(value = "messageID", alternate = {"messageId"})
+    // Allows unit tests to use a separate JSON file.
+    private static File activeJsonFile = new File(JSON_FILE);
+
+    @SerializedName(value = "messageID",
+            alternate = {"messageId"})
     private final String messageID;
 
     private final int messageNumber;
@@ -45,7 +51,7 @@ public final class Message {
 
     private static int totalMessagesSent = 0;
 
-    // Part 3: Message collections
+    // Five required collections.
     private static final List<Message> sentMessages =
             new ArrayList<>();
 
@@ -61,37 +67,48 @@ public final class Message {
     private static final List<String> messageIDs =
             new ArrayList<>();
 
-    // Constructor
-    public Message(String recipient, String message,
-                   int messageNumber) {
+    /**
+     * Constructor.
+     */
+    public Message(String recipient,
+            String message,
+            int messageNumber) {
 
         this.messageID = generateMessageID();
         this.messageNumber = messageNumber;
         this.recipient = recipient;
         this.message = message;
+
         this.messageHash = createMessageHash();
         this.status = "PENDING";
     }
 
-    // Generate a random ten-digit message ID.
+    /**
+     * Generate a random 10-digit message ID.
+     */
     private String generateMessageID() {
 
-        long number = ThreadLocalRandom.current().nextLong(
-                1_000_000_000L,
-                10_000_000_000L
+        return String.valueOf(
+                ThreadLocalRandom.current().nextLong(
+                        1_000_000_000L,
+                        10_000_000_000L
+                )
         );
-
-        return String.valueOf(number);
     }
 
-    // Validate message ID.
+    /**
+     * Validate message ID.
+     */
     public boolean checkMessageID() {
 
         return messageID != null
                 && messageID.matches("[0-9]{10}");
     }
 
-    // Validate South African international cellphone number.
+    /**
+     * Validate South African international
+     * cellphone number format.
+     */
     public String checkRecipientCell() {
 
         if (recipient != null
@@ -105,14 +122,19 @@ public final class Message {
                 + "Please correct the number and try again.";
     }
 
-    // Validate message length.
+    /**
+     * Validate message length.
+     */
     public String checkMessageLength() {
 
-        if (message == null || message.trim().isEmpty()) {
+        if (message == null
+                || message.trim().isEmpty()) {
+
             return "Please enter a message.";
         }
 
         if (message.length() <= 250) {
+
             return "Message ready to send.";
         }
 
@@ -121,7 +143,9 @@ public final class Message {
                 + "; please reduce the size.";
     }
 
-    // Generate the message hash.
+    /**
+     * Generate the message hash.
+     */
     public String createMessageHash() {
 
         if (messageID == null
@@ -143,45 +167,50 @@ public final class Message {
                 ""
         );
 
-        return (
-                messageID.substring(0, 2)
+        return (messageID.substring(0, 2)
                 + ":"
                 + messageNumber
                 + ":"
                 + firstWord
-                + lastWord
-        ).toUpperCase();
+                + lastWord).toUpperCase();
     }
 
-    // Process a message action.
+    /**
+     * Send, disregard or store a message.
+     */
     public String SentMessage(String choice) {
 
         if (choice == null) {
+
             return "Invalid message option.";
         }
 
         if (!"PENDING".equals(status)) {
+
             return "Message has already been processed.";
         }
 
-        // Send message
+        // Send message.
         if (choice.equalsIgnoreCase("Send Message")
                 || choice.equalsIgnoreCase("Send")) {
 
             if (!isValidMessage()) {
+
                 return "Message could not be sent. "
                         + "Check the message details.";
             }
 
             status = "SENT";
+
             sentMessages.add(this);
             recordMessageDetails();
+
             totalMessagesSent++;
 
             return "Message successfully sent.";
         }
 
-        // Disregard requires confirmation.
+        // Disregard message.
         if (choice.equalsIgnoreCase("Disregard Message")
                 || choice.equalsIgnoreCase("Disregard")
                 || choice.equalsIgnoreCase("Discard")) {
@@ -189,20 +218,24 @@ public final class Message {
             return "Press 0 to delete the message.";
         }
 
-        // Store message
+        // Store message.
         if (choice.equalsIgnoreCase("Store Message")
                 || choice.equalsIgnoreCase("Store")) {
 
             if (!isValidMessage()) {
+
                 return "Message could not be stored. "
                         + "Check the message details.";
             }
 
             status = "STORED";
+
             storedMessages.add(this);
 
             if (storeMessage()) {
+
                 recordMessageDetails();
+
                 return "Message successfully stored.";
             }
 
@@ -216,8 +249,11 @@ public final class Message {
         return "Invalid message option.";
     }
 
-    // Confirm disregard only when user enters 0.
-    public boolean confirmDisregard(String confirmation) {
+    /**
+     * Confirm disregard using zero.
+     */
+    public boolean confirmDisregard(
+            String confirmation) {
 
         if (!"PENDING".equals(status)
                 || !"0".equals(confirmation)) {
@@ -226,35 +262,48 @@ public final class Message {
         }
 
         status = "DISREGARDED";
+
         disregardedMessages.add(this);
         recordMessageDetails();
 
         return true;
     }
 
-    // Check message details before sending or storing.
+    /**
+     * Check message details before sending
+     * or storing.
+     */
     private boolean isValidMessage() {
 
         return checkMessageID()
                 && checkRecipientCell().equals(
-                        "Cell phone number successfully captured.")
+                        "Cell phone number successfully captured."
+                )
                 && checkMessageLength().equals(
-                        "Message ready to send.");
+                        "Message ready to send."
+                );
     }
 
-    // Record message IDs and hashes.
+    /**
+     * Add message ID and hash to their
+     * corresponding collections.
+     */
     private void recordMessageDetails() {
 
         if (!messageIDs.contains(messageID)) {
+
             messageIDs.add(messageID);
         }
 
         if (!messageHashes.contains(messageHash)) {
+
             messageHashes.add(messageHash);
         }
     }
 
-    // Display sent messages as text.
+    /**
+     * Display successfully sent messages.
+     */
     public String printMessages() {
 
         StringBuilder output = new StringBuilder();
@@ -281,42 +330,60 @@ public final class Message {
         return output.toString();
     }
 
-    // Method name.
+    /**
+     * Return total successfully sent messages.
+     */
     public int returnTotalMessagess() {
+
         return totalMessagesSent;
     }
 
     public static int getTotalMessagesSent() {
+
         return totalMessagesSent;
     }
 
-    // Save stored messages to JSON using Gson.
+    /**
+     * Save stored messages to the active JSON file.
+     *
+     * Normal application:
+     * storedMessages.json
+     *
+     * Unit tests:
+     * temporary test JSON file
+     */
     public boolean storeMessage() {
 
-        try (FileWriter writer = new FileWriter(JSON_FILE)) {
+        try (FileWriter writer =
+                new FileWriter(activeJsonFile)) {
 
             gson.toJson(storedMessages, writer);
+
             return true;
 
         } catch (IOException e) {
 
             System.out.println(
-                    "Error saving messages: " + e.getMessage());
+                    "Error saving messages: "
+                    + e.getMessage()
+            );
 
             return false;
         }
     }
 
-    // Load previously stored messages from JSON.
+    /**
+     * Load stored messages from the active JSON file.
+     */
     public static boolean loadStoredMessages() {
 
-        File file = new File(JSON_FILE);
+        if (!activeJsonFile.exists()) {
 
-        if (!file.exists()) {
             return true;
         }
 
-        try (Reader reader = new FileReader(file)) {
+        try (Reader reader =
+                new FileReader(activeJsonFile)) {
 
             Type listType =
                     new TypeToken<List<Message>>() {}.getType();
@@ -335,7 +402,9 @@ public final class Message {
                             && loadedMessage.messageHash != null) {
 
                         loadedMessage.status = "STORED";
+
                         storedMessages.add(loadedMessage);
+
                         loadedMessage.recordMessageDetails();
                     }
                 }
@@ -347,47 +416,34 @@ public final class Message {
 
             System.out.println(
                     "Error loading stored messages: "
-                    + e.getMessage());
+                    + e.getMessage()
+            );
 
             return false;
         }
     }
 
-    // Part 3: Return message collections.
-    public static List<Message> getSentMessages() {
-        return new ArrayList<>(sentMessages);
-    }
-
-    public static List<Message> getDisregardedMessages() {
-        return new ArrayList<>(disregardedMessages);
-    }
-
-    public static List<Message> getStoredMessages() {
-        return new ArrayList<>(storedMessages);
-    }
-
-    public static List<String> getMessageHashes() {
-        return new ArrayList<>(messageHashes);
-    }
-
-    public static List<String> getMessageIDs() {
-        return new ArrayList<>(messageIDs);
-    }
-
-    // Delete a sent message by hash.
-    public static boolean removeSentMessage(String hash) {
+    /**
+     * Delete a sent message using its hash.
+     */
+    public static boolean removeSentMessage(
+            String hash) {
 
         if (hash == null) {
+
             return false;
         }
 
-        for (int i = 0; i < sentMessages.size(); i++) {
+        for (int i = 0;
+                i < sentMessages.size();
+                i++) {
 
             Message current = sentMessages.get(i);
 
             if (current.messageHash.equals(hash)) {
 
                 sentMessages.remove(i);
+
                 messageIDs.remove(current.messageID);
                 messageHashes.remove(current.messageHash);
 
@@ -398,14 +454,21 @@ public final class Message {
         return false;
     }
 
-    // Delete a stored message by hash.
-    public static boolean removeStoredMessage(String hash) {
+    /**
+     * Delete a stored message using its hash.
+     * The updated collection is saved to JSON.
+     */
+    public static boolean removeStoredMessage(
+            String hash) {
 
         if (hash == null) {
+
             return false;
         }
 
-        for (int i = 0; i < storedMessages.size(); i++) {
+        for (int i = 0;
+                i < storedMessages.size();
+                i++) {
 
             Message current = storedMessages.get(i);
 
@@ -422,6 +485,7 @@ public final class Message {
                 }
 
                 storedMessages.add(i, current);
+
                 return false;
             }
         }
@@ -429,28 +493,195 @@ public final class Message {
         return false;
     }
 
-    // Getter methods
+    // ========================================
+    // MESSAGE COLLECTION GETTERS
+    // ========================================
+
+    public static List<Message> getSentMessages() {
+
+        return new ArrayList<>(sentMessages);
+    }
+
+    public static List<Message> getDisregardedMessages() {
+
+        return new ArrayList<>(disregardedMessages);
+    }
+
+    public static List<Message> getStoredMessages() {
+
+        return new ArrayList<>(storedMessages);
+    }
+
+    public static List<String> getMessageHashes() {
+
+        return new ArrayList<>(messageHashes);
+    }
+
+    public static List<String> getMessageIDs() {
+
+        return new ArrayList<>(messageIDs);
+    }
+
+    // ========================================
+    // JUNIT TEST ISOLATION
+    // ========================================
+
+    /**
+     * Redirect JSON operations to a temporary file.
+     *
+     * Call this before a unit test that stores
+     * or deletes messages.
+     */
+    public static void useTestJsonFile(Path testFile) {
+
+        if (testFile == null) {
+
+            throw new IllegalArgumentException(
+                    "Test JSON file cannot be null."
+            );
+        }
+
+        activeJsonFile = testFile.toFile();
+    }
+
+    /**
+     * Reset all in-memory message collections.
+     *
+     * Does not delete JSON files.
+     */
+    public static void resetForTesting() {
+
+        sentMessages.clear();
+        disregardedMessages.clear();
+        storedMessages.clear();
+
+        messageHashes.clear();
+        messageIDs.clear();
+
+        totalMessagesSent = 0;
+    }
+
+    /**
+     * Restore the application's original JSON path.
+     *
+     * Call this after each test.
+     */
+    public static void restoreNormalJsonFile() {
+
+        activeJsonFile = new File(JSON_FILE);
+    }
+
+    /**
+     * Save messages to a specific test JSON file.
+     */
+    public static boolean saveStoredMessagesForTesting(
+            Path testFile) {
+
+        if (testFile == null) {
+
+            return false;
+        }
+
+        try (FileWriter writer =
+                new FileWriter(testFile.toFile())) {
+
+            gson.toJson(storedMessages, writer);
+
+            return true;
+
+        } catch (IOException e) {
+
+            System.out.println(
+                    "Test JSON save error: "
+                    + e.getMessage()
+            );
+
+            return false;
+        }
+    }
+
+    /**
+     * Load messages from a specific test JSON file.
+     */
+    public static boolean loadStoredMessagesForTesting(
+            Path testFile) {
+
+        if (testFile == null) {
+
+            return false;
+        }
+
+        try (Reader reader =
+                new FileReader(testFile.toFile())) {
+
+            Type listType =
+                    new TypeToken<List<Message>>() {}.getType();
+
+            List<Message> loaded =
+                    gson.fromJson(reader, listType);
+
+            storedMessages.clear();
+
+            if (loaded != null) {
+
+                for (Message loadedMessage : loaded) {
+
+                    if (loadedMessage != null
+                            && loadedMessage.messageID != null
+                            && loadedMessage.messageHash != null) {
+
+                        loadedMessage.status = "STORED";
+
+                        storedMessages.add(loadedMessage);
+                        loadedMessage.recordMessageDetails();
+                    }
+                }
+            }
+
+            return true;
+
+        } catch (IOException | RuntimeException e) {
+
+            System.out.println(
+                    "Test JSON load error: "
+                    + e.getMessage()
+            );
+
+            return false;
+        }
+    }
+
+    // ========================================
+    // MESSAGE GETTERS
+    // ========================================
+
     public String getMessageID() {
+
         return messageID;
     }
 
     public int getMessageNumber() {
+
         return messageNumber;
     }
 
     public String getRecipient() {
+
         return recipient;
     }
 
     public String getMessage() {
+
         return message;
     }
 
     public String getMessageHash() {
+
         return messageHash;
     }
 
     public String getStatus() {
+
         return status;
     }
 }
