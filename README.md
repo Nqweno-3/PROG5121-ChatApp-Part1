@@ -1,189 +1,308 @@
-Student Name: Ngati Minqweno
-Student Number: ST10535825
-Module Name: Programming 1A
-Module Code: PROG5121
-Assignment: ChatApp Part 1 project
+QuickChat — PROG5121
+**Student Name:** Ngati Minqweno  
+---
 
-PROJECT OVERVIEW
-Quick Chat Part 1 is a Java-based application that demonstrates a basic user registration and login system. The project allows a user to enter their personal details, create a username and password, and provide a 	South African cellphone number. The application checks whether the information entered follows the required rules before allowing the user to log in. The project also includes Junit tests to check that the registration and login methods work correctly.
+# Part 1: User Registration and Login
 
-FEATURES:
-•	User registration
-•	Username validation
-•	Password complexity validation
-•	South African cellphone number validation
-•	User login
-•	Login status messages
-•	Junit unit tests for valid and invalid inputs
-TECHNOLOGIES USED:
-•	Java
-•	Maven
-•	NetBeans
-•	JUnit 5 
-•	Java Scanner for user inputs
-PROJECT STRUCTURE 
-The project is organised into the following main files:
-•	Main.java – Contains the main program and handles user input, registration and login.
-•	Login.java – Contains the methods used to validate user details and manage the login process.
-•	LoginTest.java – Contains JUnit tests for checking the Login class methods.
-•	Pom.xml – Contains the Maven project configuration and JUnit dependencies.
-•	ReadME.md – Provides information about the project and explains how to use it
+## Project Overview
 
-HOW THE APPLICATION WORKS
+QuickChat Part 1 is a Java-based application that demonstrates a basic user registration and login system.
 
-1.	Registration
-The user is asked to enter:
-•	First Name
-•	Last Name
-•	Username
-•	Password
-•	Cellphone number
-The application checks that the required information has been entered and that the username, password and cellphone number meet the required conditions.
+The application allows users to enter their personal details, create a username and password, and provide a South African cellphone number. It validates the information entered before allowing users to log in.
 
-2.	Username Validation
+The project also includes JUnit tests to verify that the registration and login methods work correctly.
+
+## Features
+
+- User registration
+- Username validation
+- Password complexity validation
+- South African cellphone number validation
+- User login
+- Login status messages
+- JUnit unit tests for valid and invalid inputs
+
+## Technologies Used
+
+- Java
+- Apache Maven
+- Apache NetBeans
+- JUnit 5
+- Java Scanner for user input
+
+## Project Structure
+
+The main files used in Part 1 are:
+
+- `Main.java` — Handles user input, registration, and login.
+- `Login.java` — Validates user details and manages the login process.
+- `LoginTest.java` — Contains JUnit tests for the Login class.
+- `pom.xml` — Contains Maven configuration and project dependencies.
+- `README.md` — Provides project documentation and instructions.
+
+## How the Application Works
+
+### 1. User Registration
+
+The user enters their first name, last name, username, password, and cellphone number.
+
+The application checks whether the required information has been entered and whether it meets the validation rules.
+
+### 2. Username Validation
+
 The username must:
-•	Contain an underscore (_)
-•	Be no longer than 5 characters, e.g. kyl_1
 
-3.	Password Validation
+- Contain an underscore (`_`).
+- Be no longer than five characters.
+
+Example: `kyl_1`
+
+### 3. Password Validation
+
 The password must:
-•	Contain at least 8 characters
-•	Have at least one uppercase letter
-•	Have at least one number
-•	Have at least one special character, e.g. Ch&&sec@ke99!
 
-4.	Cellphone Number Validation
+- Contain at least eight characters.
+- Include at least one uppercase letter.
+- Include at least one number.
+- Include at least one special character.
+
+Example: `Ch&&sec@ke99!`
+
+### 4. Cellphone Number Validation
+
 The cellphone number must:
-•	Starts with +27
-•	Contain the correct number of digits
-•	Follow the required South African international format, e.g. +27838968976
 
+- Begin with `+27`.
+- Contain the correct number of digits.
+- Follow the required South African international format.
 
-5.	Login
-After successful registration, the user enters their username and password. The application compares the entered details with the registered details. If they match, the user receives a successful login message. If they do not match, an error message is displayed. 
+Example: `+27838968976`
 
-JUnit Testing
-The project contains a LoginTest.java file that tests the different methods in the Login class.
-The tests check:
-•	Valid username
-•	Valid password
-•	Valid cellphone number 
-•	Successful registration
-•	Successful login
-•	Login status
-•	Invalid username
-•	Invalid password
-•	Invalid cellphone number
-There are 9 JUnit tests in total.
+### 5. User Login
 
-RUNNING THE PROJECT
-Running the application
-Open the project in NetBeans and run the Main.java file. The application will open in the console and ask the user to enter their registration and login details.
-Running the tests
-The tests can be run using Maven in NetBeans. The project should show:
-Tests run: 9, Failures: 0, Errors: 0, Skipped: 0
-BUILD SUCCESS
- (when all tests pass successfully).
+After successful registration, the user enters their username and password.
 
-REQUIREMENTS 
-To run this project, you need:
-•	Java Development Kit (JDK)
-•	Apache Maven
-•	NetBeans IDE
-•	JUnit 5
+The application compares the entered credentials with the registered details.
 
-REGEX REFERENCE 
+If the credentials match, a successful login message is displayed. Otherwise, an error message appears.
 
-Cellphone Number:
-The cellphone number validation uses a regular expression to check
-that the number follows the South African international format beginning
-with +27.
+## JUnit Testing
 
+Part 1 includes `LoginTest.java`, which tests:
 
-Regex:
+- Valid and invalid usernames
+- Valid and invalid passwords
+- Valid and invalid cellphone numbers
+- Successful registration
+- Successful login
+- Login status messages
 
-`^\+27[0-9]{9}$`
+The original Part 1 implementation included nine JUnit tests.
 
-Example:
+## How to Run the Application
 
-`+27838968976`
+1. Open the Maven project in Apache NetBeans.
+2. Allow Maven to load the required dependencies.
+3. Run `Main.java`.
+4. Enter the registration details.
+5. Log in using the registered credentials.
 
-REFERENCES
+## Running the Tests
 
-Oracle. n.d. Java Documentation. Available at:
-https://docs.oracle.com/en/java/
+1. Open the project in NetBeans.
+2. Expand **Test Packages**.
+3. Locate `LoginTest.java`.
+4. Right-click and select **Test File**.
 
-Apache Maven. n.d. Maven Documentation. Available at:
-https://maven.apache.org/guides/
+A successful test run should show zero failures and errors, followed by `BUILD SUCCESS`.
 
-ICASA. n.d. Numbering Plan Regulations. Available at:
-https://www.icasa.org.za/
+## Requirements
 
-JUnit. n.d. JUnit 5 User Guide. Available at:
-https://junit.org/junit5/docs/current/user-guide/
+- Java Development Kit (JDK)
+- Apache Maven
+- Apache NetBeans
+- JUnit 5
 
-YOUTUBE Video 
+## Regular Expression Reference
+
+Cellphone number validation uses a regular expression to check the South African international format.
+
+```regex
+^\+27[0-9]{9}$
+```
+
+Example: `+27838968976`
+
+## References
+
+Oracle. n.d. *Java Documentation*. Available at: https://docs.oracle.com/en/java/
+
+Apache Maven. n.d. *Maven Documentation*. Available at: https://maven.apache.org/guides/
+
+ICASA. n.d. *Numbering Plan Regulations*. Available at: https://www.icasa.org.za/
+
+JUnit. n.d. *JUnit 5 User Guide*. Available at: https://junit.org/junit5/docs/current/user-guide/
+
+**YouTube Reference:**  
 https://youtube.com/shorts/otCD6NTPzio?si=s_WrawHZwDAlZ4Be
 
+---
 
-PART 2
+# Part 2: Message Management and JSON Storage
 
+## Project Overview
 
-Quick Chat is a Java console-based messaging application developed for part 2. The application extends the registration and login functionality from part 1 and allows users to send, disregard, and store messages.
-FEATURES
-•	User registration and login.
-•	Menu-driven console interface.
-•	Set a limit for the number of messages.
-•	Generate a unique 10-digit message id.
-•	Validate message IDs and recipient cellphone numbers.
-•	Limit messages to 250 characters.
-•	Generate a message hash.
-•	Send, disregard, or store messages.
-•	Display the total number of messages sent.
-•	Store messages in JSon format.
-•	Automated testing using Junit.
+QuickChat Part 2 extends the registration and login functionality developed in Part 1 by introducing a console-based messaging system.
 
-TECHNOLOGIES USED
-•	Java
-•	Apache Maven Junit
-•	Git and GitHub
-•	GitHub Desktop
+The application allows users to create messages, validate recipient cellphone numbers, generate unique message identifiers, and choose whether to send, disregard, or store messages.
 
-REQUIREMENTS
-To run the application, you need:
-•	Java Development Kit (JDK)
-•	Apache Maven, if it is not included through your IDE that supports Maven projects.
+Stored messages are saved in JSON format.
 
-How To Run the Application
-1.	Clone or download the repository from GitHub.
-2.	Open the project on NetBeans.
-3.	Allow Maven to load the project dependencies.
-4.	Run the Main.java file.
-5.	Register or log in when prompted.
-6.	Follow the on-screen menu instructions to use ChatApp.
+## Features
 
-Main Menu
-The application provides these options:
-1.	Send Messages
-2.	Show recently sent messages
-3.	Quit.
-The recently sent messages option displays a “Coming Soon.” Message as specified in project requirements.
+- User registration and login
+- Menu-driven console interface
+- Message limit selection
+- Unique 10-digit Message ID generation
+- Message ID validation
+- Recipient cellphone number validation
+- Maximum message length of 250 characters
+- Message Hash generation
+- Send, disregard, and store message options
+- Total messages sent
+- JSON message storage
+- Automated JUnit testing
 
-Message Storage
-Messages selected for storage are saved in a JSon file named storedMessages.json. This file stores the message information in Json format.
+## Technologies Used
 
-Testing
-The application includes Junit tests for checking the message functionality and related requirements.
-To run the tests in NetBeans:
-1.	Open the project.
-2.	Locate the test classes under Test Packages.
-3.	Right-cllick a test class.
-4.	Select Test File or run all project tests.
+- Java
+- Apache Maven
+- Apache NetBeans
+- JUnit 5
+- Gson for JSON processing
+- Git and GitHub
+- GitHub Desktop
 
-Version Control
-GitHub and GitHub Desktop are used to manage the project’s source code and track development progress.
+## Project Structure
 
-YouTube link: https://youtu.be/cIv5deuFNdg?si=p3eSgmTlyDH-MJBA
+The main files used in Part 2 include:
+
+- `Main.java` — Handles the application menu and user interaction.
+- `Login.java` — Manages registration and login.
+- `Message.java` — Handles message validation, identifiers, hashes, and storage.
+- `MessageTest.java` — Tests message functionality.
+- `pom.xml` — Manages Maven dependencies and project configuration.
+- `storedMessages.json` — Stores messages in JSON format.
+
+## How the Application Works
+
+### 1. Registration and Login
+
+The user registers and logs in using the functionality developed in Part 1.
+
+### 2. Message Limit
+
+After logging in, the user enters the number of messages they wish to process.
+
+The application uses loops to control message entry and processing.
+
+### 3. Message Creation
+
+For each message, the user enters:
+
+- Recipient cellphone number
+- Message text
+
+The application validates the recipient and checks that the message does not exceed 250 characters.
+
+### 4. Message ID Generation
+
+Each message receives a randomly generated 10-digit Message ID.
+
+The Message ID is used to identify individual messages.
+
+### 5. Message Hash Generation
+
+The application generates a Message Hash using the first two digits of the Message ID, the message number, and selected words from the message.
+
+The hash helps identify messages during processing.
+
+### 6. Message Actions
+
+The user can choose to:
+
+- **Send Message** — Mark the message as successfully sent.
+- **Disregard Message** — Discard the message after confirmation.
+- **Store Message** — Save the message in JSON format.
+
+### 7. Total Messages Sent
+
+The application keeps track of the number of messages successfully sent.
+
+## Part 2 Main Menu
+
+The original Part 2 application included:
+
+1. Send Messages
+2. Show recently sent messages
+3. Quit
+
+The recently sent messages option initially displayed a "Coming Soon" message, as specified in the Part 2 requirements.
+
+This functionality was subsequently extended in Part 3.
+
+## JSON Message Storage
+
+Messages selected for storage are saved in a file named `storedMessages.json`.
+
+The file contains message information in JSON format, including message identifiers, recipient details, message text, hashes, and status.
+
+## How to Run the Application
+
+1. Clone or download the GitHub repository.
+2. Open the Maven project in Apache NetBeans.
+3. Allow Maven to load the project dependencies.
+4. Run `Main.java`.
+5. Register and log in.
+6. Enter the number of messages to process.
+7. Follow the menu instructions to send, disregard, or store messages.
+
+## JUnit Testing
+
+Part 2 includes automated tests that verify message functionality and related requirements.
+
+To run the tests:
+
+1. Open the project in NetBeans.
+2. Expand **Test Packages**.
+3. Locate the relevant test class.
+4. Right-click and select **Test File**, or run all project tests.
+
+A successful test run should display zero failures and errors, followed by `BUILD SUCCESS`.
+
+## Version Control
+
+Git and GitHub are used to manage the project's source code and development history.
+
+GitHub Desktop is used to commit and push changes to the remote repository.
+
+## Requirements
+
+- Java Development Kit (JDK)
+- Apache Maven
+- Apache NetBeans or another Java IDE with Maven support
+- JUnit 5
+- Gson
+
+## YouTube Reference
+
+https://youtu.be/cIv5deuFNdg?si=p3eSgmTlyDH-MJBA
+
+---
+
+# Part 3: Store Data and Display Message Reports
+
+*Continue with your existing Part 3 README section here.*
 
 # QuickChat — PROG5121 Portfolio of Evidence
 
